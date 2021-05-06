@@ -1,0 +1,31 @@
+{
+  "name": "react-modular-js",
+  "version": "1.0.0",
+  "description": "react-modular-js is a estrutural framework for react, inspired by flutter modular",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaykon-w/react-modular-js"
+  },
+  "author": "Jaykon Willian de Oliveira",
+  "license": "ISC",
+  "dependencies": {
+    "rxjs": "~7.0.0"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0  || ^17.0.0",
+    "react-dom": "^16.8.0  || ^17.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "~17.0.4",
+    "@types/react-dom": "~17.0.3",
+    "typescript": "latest",
+    "prettier": "latest"
+  }
+}
