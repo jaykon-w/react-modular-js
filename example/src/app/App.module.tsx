@@ -1,19 +1,24 @@
 import { useMemo } from 'react';
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import { Provider } from 'react-modular-js';
 
-import HomeModule from './modules/home/Home.module';
-import AboutModule from './modules/about/About.module';
+import LoginModule from './modules/login/Login.module';
+import { SessionServiceMock } from './shared/auth/store/session/Session.service.mock';
+import ProtectedRoute from './shared/auth/Protected.route';
+import InAppModule from './modules/in_app/InApp.module';
 
 const AppModule = () => {
-  const binds = useMemo(() => [], []);
+  const binds = useMemo(() => [() => new SessionServiceMock()], []);
 
   return (
     <BrowserRouter>
       <Provider binds={binds}>
         <Switch>
-          <Route path="/about" component={AboutModule} />
-          <Route path="/" component={HomeModule} />
+          <Route exact path="/login" component={LoginModule} />
+          <ProtectedRoute path="/in_app" redirect="/login" component={InAppModule} />
+          <Route path="/">
+            <Redirect to="/in_app" />
+          </Route>
         </Switch>
       </Provider>
     </BrowserRouter>

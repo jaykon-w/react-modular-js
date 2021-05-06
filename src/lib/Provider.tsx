@@ -1,17 +1,30 @@
-import { useContext, useMemo, createContext } from 'react';
+import { useContext, useMemo, createContext, useEffect } from 'react';
 
 const Ctx = createContext([] as any);
 
+export interface IDispose {
+  dispose(): any;
+}
+
+export type ProviderBinds = (
+  | ((inject: <T>(cls: any) => T) => any)
+  | [(inject: <T>(cls: any) => T) => any, { forwardRef: any }]
+)[];
+
 interface Props {
-  binds: (
-    | ((inject: <T>(cls: any) => T) => any)
-    | [(inject: <T>(cls: any) => T) => any, { forwardRef: any }]
-  )[];
+  binds: ProviderBinds;
   children: React.ReactElement;
 }
 
 export const Provider: React.FC<Props> = ({ children, binds }) => {
   const _bindsMemo = useDependency(binds);
+
+  useEffect(() => {
+    return () => {
+      _bindsMemo.forEach((e) => e.dispose?.());
+    };
+  });
+
   return <Ctx.Provider value={_bindsMemo}>{children}</Ctx.Provider>;
 };
 
@@ -25,7 +38,10 @@ function useDependency(binds: Props['binds']) {
     let _binds: any[] = [];
 
     function inject<T>(cls: any): T {
-      return _binds.find((e: any) => e instanceof (cls as any));
+      return (
+        (parentCtx && parentCtx.find((e: any) => e instanceof (cls as any))) ||
+        _binds.find((e: any) => e instanceof (cls as any))
+      );
     }
 
     // binds.forEach
@@ -34,7 +50,7 @@ function useDependency(binds: Props['binds']) {
         ? e
         : [e];
       const [dependency, options] = injected;
-      if (parentCtx && options && options.forwardRef) {
+      if (parentCtx && options?.forwardRef) {
         try {
           const instance = parentCtx.find((e: any) => e instanceof options.forwardRef);
           if (instance) _binds.push(instance);
@@ -53,7 +69,7 @@ function useDependency(binds: Props['binds']) {
   return useMemo(fn, [binds]);
 }
 
-export function useProvider<T>(cls: new (...args: any) => T): T {
+export function useProvider<T>(cls: Function & { prototype: T }): T {
   const ctx = useContext(Ctx);
 
   return useMemo(() => {

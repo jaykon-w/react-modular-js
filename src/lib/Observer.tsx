@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Observable } from "rxjs";
+import React, { useEffect, useState } from 'react';
+import { Observable } from 'rxjs';
 
 interface Props<T> {
   stream: Observable<T>;
   default?: React.ReactElement;
-  children: (val: T) => React.ReactElement;
+  children: (val: T) => any;
 }
 
 export function Observer<T>(props: Props<T>): React.ReactElement | null {
