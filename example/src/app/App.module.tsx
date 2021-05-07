@@ -14,18 +14,15 @@ const AppModule = () => {
   return (
     <BrowserRouter>
       <Provider binds={binds}>
-        <>
-          <AppPage>
-            <>{console.log('asd')}</>
-            <Switch>
-              <Route exact path="/login" component={LoginModule} />
-              <ProtectedRoute path="/in_app" redirect="/login" component={InAppModule} />
-              <Route path="/">
-                <Redirect to="/in_app" />
-              </Route>
-            </Switch>
-          </AppPage>
-        </>
+        <AppPage>
+          <Switch>
+            <Route exact path="/login" component={LoginModule} />
+            <ProtectedRoute path="/in_app" redirect="/login" component={InAppModule} />
+            <Route path="/">
+              <Redirect to="/in_app" />
+            </Route>
+          </Switch>
+        </AppPage>
       </Provider>
     </BrowserRouter>
   );
