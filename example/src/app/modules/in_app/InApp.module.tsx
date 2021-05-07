@@ -11,7 +11,7 @@ const InAppModule = () => {
   console.warn('RENDER: InAppModule');
   const { path } = useRouteMatch();
   /*
-   seguimentos de rotas intermedidiarios, são destruidos e recriados quando há mudança de rotas
+   seguimentos de rotas intermediarios, são destruidos e recriados quando há mudança de rotas
    nesse caso o metodo dispose é acionado, porém a instancia dos serviços não serão recriadas caso esteja dentro de um useMemo
    caso precise usar o dispose, o melhor por enquanto a se fazer é não utilizar o useMemo, e deixar que ele crie
    novamente as instancias dos serviços

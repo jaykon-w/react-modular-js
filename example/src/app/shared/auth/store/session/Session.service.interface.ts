@@ -1,13 +1,7 @@
 import { Subject } from 'rxjs';
 import { IUser } from '../user/User.model';
 
-interface ISession {
-  logged: Subject<boolean>;
-  user: Subject<IUser | undefined>;
-  initialized: Subject<boolean>;
-}
-
-export abstract class ISessionService implements ISession {
+export abstract class ISessionService {
   abstract logged: Subject<boolean>;
   abstract user: Subject<IUser | undefined>;
   abstract initialized: Subject<boolean>;
