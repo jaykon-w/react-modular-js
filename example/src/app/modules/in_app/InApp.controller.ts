@@ -1,5 +1,5 @@
 import { IDispose } from 'react-modular-js';
-import { BehaviorSubject, ReplaySubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { ISessionService } from '../../shared/auth/store/session/Session.service.interface';
 import { IUser } from '../../shared/auth/store/user/User.model';
 

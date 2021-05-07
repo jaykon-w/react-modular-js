@@ -1,0 +1,26 @@
+.login-page {
+  width: 100%;
+  height: 100vh;
+  background: #272a3c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.login-page .field {
+  display: flex;
+  padding-bottom: 8px;
+  align-items: center;
+}
+
+.login-page .field > label {
+  width: 80px;
+  display: inline-block;
+}
+
+.login-page .field > input {
+  width: 100%;
+  padding: 4px 8px;
+}

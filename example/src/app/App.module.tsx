@@ -6,6 +6,7 @@ import LoginModule from './modules/login/Login.module';
 import { SessionServiceMock } from './shared/auth/store/session/Session.service.mock';
 import ProtectedRoute from './shared/auth/Protected.route';
 import InAppModule from './modules/in_app/InApp.module';
+import AppPage from './App.page';
 
 const AppModule = () => {
   const binds = useMemo(() => [() => new SessionServiceMock()], []);
@@ -13,13 +14,18 @@ const AppModule = () => {
   return (
     <BrowserRouter>
       <Provider binds={binds}>
-        <Switch>
-          <Route exact path="/login" component={LoginModule} />
-          <ProtectedRoute path="/in_app" redirect="/login" component={InAppModule} />
-          <Route path="/">
-            <Redirect to="/in_app" />
-          </Route>
-        </Switch>
+        <>
+          <AppPage>
+            <>{console.log('asd')}</>
+            <Switch>
+              <Route exact path="/login" component={LoginModule} />
+              <ProtectedRoute path="/in_app" redirect="/login" component={InAppModule} />
+              <Route path="/">
+                <Redirect to="/in_app" />
+              </Route>
+            </Switch>
+          </AppPage>
+        </>
       </Provider>
     </BrowserRouter>
   );

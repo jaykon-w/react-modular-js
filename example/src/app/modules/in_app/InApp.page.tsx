@@ -1,4 +1,4 @@
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Observer, useProvider } from 'react-modular-js';
 import { InAppController } from './InApp.controller';
 
@@ -21,11 +21,20 @@ const InAppPage: React.FC<Props> = ({ children }) => {
           <span>Carregando...</span>
         ) : (
           <div>
-            <div style={{ display: 'flex', padding: 16, background: '#666', color: '#fff' }}>
-              REACT-MODULAR-JS
+            <div
+              style={{
+                display: 'flex',
+                padding: 16,
+                background: '#272a3c',
+                color: '#fff',
+                boxShadow: 'rgb(0 0 0 / 50%) 0px 1px 5px',
+              }}
+            >
+              <strong>REACT-MODULAR-JS</strong>
               <div style={{ flex: 1 }}></div>
-              <Observer stream={inAppController.user}>{(user) => user?.name}</Observer> |{' '}
-              <a href="#" onClick={logout}>
+              <Observer stream={inAppController.user}>{(user) => user?.name}</Observer>{' '}
+              <span style={{ padding: '0 4px' }}>|</span>
+              <a style={{ color: '#fff', fontSize: 'small' }} href="#" onClick={logout}>
                 Logout
               </a>
             </div>
