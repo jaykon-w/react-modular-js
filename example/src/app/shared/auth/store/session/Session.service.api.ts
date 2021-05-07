@@ -19,4 +19,8 @@ export class SessionServiceApi extends ISessionService {
   logout() {
     throw new Error('Method not implemented.');
   }
+
+  updateUser(user: Partial<IUser>): void {
+    throw new Error('Method not implemented.');
+  }
 }

@@ -1,6 +1,10 @@
-import { useContext, useMemo, createContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-const Ctx = createContext([] as any);
+const Ctx = createContext(new Map() as any);
+const controlledMappedInstances = new Map();
+let debug = false;
+
+export const setDebug = (val: boolean) => (debug = val);
 
 export interface IDispose {
   dispose(): any;
@@ -13,68 +17,93 @@ export type ProviderBinds = (
 
 interface Props {
   binds: ProviderBinds;
-  children: React.ReactElement;
+  children: () => React.ReactElement;
 }
 
 export const Provider: React.FC<Props> = ({ children, binds }) => {
-  const _bindsMemo = useDependency(binds);
+  let dependencyMap = useRef(new Map());
+  const [initialized, setInitialized] = useState(false);
+  const parentCtx = useContext(Ctx);
 
   useEffect(() => {
-    return () => {
-      _bindsMemo.forEach((e) => e.dispose?.());
-    };
-  });
+    getDependencies(binds, dependencyMap.current, parentCtx);
+    controlledMappedInstances.set(dependencyMap.current, dependencyMap.current);
+    setInitialized(true);
 
-  return <Ctx.Provider value={_bindsMemo}>{children}</Ctx.Provider>;
+    return () => {
+      [...dependencyMap.current!.values()].forEach((e) => {
+        if (e.dispose) {
+          e.dispose();
+          if (debug) console.log(`DISPOSE: ${e.__proto__.constructor.name}`);
+        }
+      });
+      controlledMappedInstances.delete(dependencyMap.current);
+      dependencyMap.current!.clear();
+      dependencyMap = undefined as any;
+    };
+  }, [binds]);
+
+  return initialized ? (
+    <Ctx.Provider value={dependencyMap.current}>{children()}</Ctx.Provider>
+  ) : null;
 };
 
-function useDependency(binds: Props['binds']) {
-  let parentCtx: any;
-  try {
-    parentCtx = useContext(Ctx);
-  } catch {}
+function getDependencies(
+  binds: Props['binds'],
+  dependecyMap: Map<any, any>,
+  parentCtx: Map<any, any>,
+) {
+  function inject<T>(cls: any): T {
+    return (
+      [...dependecyMap.values()].find((e: any) => e instanceof (cls as any)) ||
+      (parentCtx && [...parentCtx.values()].find((e: any) => e instanceof (cls as any)))
+    );
+  }
 
-  const fn = () => {
-    let _binds: any[] = [];
+  if (parentCtx) {
+    dependecyMap.set('parent', parentCtx);
+  }
 
-    function inject<T>(cls: any): T {
-      return (
-        (parentCtx && parentCtx.find((e: any) => e instanceof (cls as any))) ||
-        _binds.find((e: any) => e instanceof (cls as any))
-      );
+  for (let e of binds) {
+    const injected: [(inject: <T>(cls: any) => T) => any, { forwardRef: any }?] = Array.isArray(e)
+      ? e
+      : [e];
+    const [dependency, options] = injected;
+
+    function factoryInstance() {
+      const depInstance = dependency(inject);
+      dependecyMap.set(depInstance, depInstance);
+      if (debug) console.log(`INITIALIZE: ${depInstance.__proto__.constructor.name}`);
     }
 
-    // binds.forEach
-    for (let e of binds) {
-      const injected: [(inject: <T>(cls: any) => T) => any, { forwardRef: any }?] = Array.isArray(e)
-        ? e
-        : [e];
-      const [dependency, options] = injected;
-      if (parentCtx && options?.forwardRef) {
-        try {
-          const instance = parentCtx.find((e: any) => e instanceof options.forwardRef);
-          if (instance) _binds.push(instance);
-          else _binds.push(dependency(inject));
-        } catch (err) {
-          _binds.push(dependency(inject));
-        }
-      } else {
-        _binds.push(dependency(inject));
+    if (parentCtx && options?.forwardRef) {
+      try {
+        const instance = [...parentCtx.values()].find((e: any) => e instanceof options.forwardRef);
+        if (instance) dependecyMap.set(instance, instance);
+        else factoryInstance();
+      } catch (err) {
+        factoryInstance();
       }
+    } else {
+      factoryInstance();
     }
+  }
 
-    return _binds;
-  };
-
-  return useMemo(fn, [binds]);
+  return dependecyMap;
 }
 
 export function useProvider<T>(cls: Function & { prototype: T }): T {
   const ctx = useContext(Ctx);
 
   return useMemo(() => {
-    const instance = ctx.find((e: any) => e instanceof cls);
-    if (!instance) throw Error(`instance of ${cls.name} is not provided in this context`);
-    return instance;
+    function find(_ctx: any): any {
+      const instance = [..._ctx.values()].find((e: any) => e instanceof cls);
+      if (instance) return instance;
+      if (!instance && !_ctx.has('parent'))
+        throw Error(`instance of ${cls.name} is not provided in this context`);
+      if (!instance && _ctx.has('parent')) return find(_ctx.get('parent'));
+    }
+
+    return find(ctx);
   }, [cls]);
 }

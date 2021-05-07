@@ -6,29 +6,28 @@ import HomeModule from './modules/home/Home.module';
 import { InAppController } from './InApp.controller';
 import { ISessionService } from '../../shared/auth/store/session/Session.service.interface';
 import InAppPage from './InApp.page';
+import { SideMenuController } from '../../shared/side_menu/SideMenu.controller';
 
 const InAppModule = () => {
-  console.warn('RENDER: InAppModule');
   const { path } = useRouteMatch();
-  /*
-   seguimentos de rotas intermediarios, são destruidos e recriados quando há mudança de rotas
-   nesse caso o metodo dispose é acionado, porém a instancia dos serviços não serão recriadas caso esteja dentro de um useMemo
-   caso precise usar o dispose, o melhor por enquanto a se fazer é não utilizar o useMemo, e deixar que ele crie
-   novamente as instancias dos serviços
-  */
-  const binds: ProviderBinds = [(i) => new InAppController(i(ISessionService))];
+  const binds: ProviderBinds = useMemo(
+    () => [(i) => new InAppController(i(ISessionService)), (i) => new SideMenuController()],
+    [],
+  );
 
   return (
     <Provider binds={binds}>
-      <InAppPage>
-        <Switch>
-          <Route path={`${path}/about`} component={AboutModule} />
-          <Route path={`${path}/home`} component={HomeModule} />
-          <Route path={`${path}/`}>
-            <Redirect to={`${path}/home`} />
-          </Route>
-        </Switch>
-      </InAppPage>
+      {() => (
+        <InAppPage>
+          <Switch>
+            <Route path={`${path}/about`} component={AboutModule} />
+            <Route path={`${path}/home`} component={HomeModule} />
+            <Route path={`${path}/`}>
+              <Redirect to={`${path}/home`} />
+            </Route>
+          </Switch>
+        </InAppPage>
+      )}
     </Provider>
   );
 };

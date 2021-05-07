@@ -1,11 +1,19 @@
 import { IDispose } from 'react-modular-js';
 
 export class HomeController implements IDispose {
+  val = 1;
+
+  private _interval: any;
+
   constructor() {
-    console.log('INITIALIZE: Homecontroller');
+    this._interval = setInterval(() => console.log(this.val++, Math.random()), 1000);
+  }
+
+  handller(evt: any) {
+    console.log(evt.x);
   }
 
   dispose() {
-    console.log('DISPOSE: Homecontroller');
+    clearInterval(this._interval);
   }
 }

@@ -10,7 +10,6 @@ export class InAppController implements IDispose {
   private _userSub: Subscription;
 
   constructor(private session: ISessionService) {
-    console.log('INITIALIZE: InAppController');
     this._userSub = this.session.user.subscribe(this.user);
   }
 
@@ -24,7 +23,6 @@ export class InAppController implements IDispose {
   }
 
   dispose() {
-    console.log('DISPOSE: InAppController');
     this._userSub.unsubscribe();
   }
 }

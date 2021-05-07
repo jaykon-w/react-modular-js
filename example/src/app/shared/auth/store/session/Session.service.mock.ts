@@ -39,6 +39,13 @@ export class SessionServiceMock extends ISessionService {
     this.logged.next(false);
   }
 
+  updateUser(user: Partial<IUser>): void {
+    this.user.next({
+      ...this.user.value!,
+      ...user,
+    });
+  }
+
   private restore() {
     const _user = localStorage.getItem('user');
     if (!_user) return;

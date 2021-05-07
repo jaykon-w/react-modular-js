@@ -1,0 +1,14 @@
+.in-app-full {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.in-app-full > header {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: #272a3c;
+  color: #fff;
+  box-shadow: rgb(0 0 0 / 50%) 0px 1px 5px;
+}

@@ -1,5 +1,5 @@
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { IDispose } from '../../../../../dist';
+import { IDispose } from 'react-modular-js';
 import { ISessionService } from '../../shared/auth/store/session/Session.service.interface';
 import { IUser } from '../../shared/auth/store/user/User.model';
 

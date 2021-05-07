@@ -10,9 +10,11 @@ const AboutModule = () => {
 
   return (
     <Provider binds={binds}>
-      <Switch>
-        <Route exact path={path} component={AboutPage} />
-      </Switch>
+      {() => (
+        <Switch>
+          <Route exact path={path} component={AboutPage} />
+        </Switch>
+      )}
     </Provider>
   );
 };

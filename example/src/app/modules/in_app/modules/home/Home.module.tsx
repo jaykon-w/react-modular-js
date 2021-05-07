@@ -10,9 +10,11 @@ const HomeModule = () => {
 
   return (
     <Provider binds={binds}>
-      <Switch>
-        <Route exact path={path} component={HomePage} />
-      </Switch>
+      {() => (
+        <Switch>
+          <Route exact path={path} component={HomePage} />
+        </Switch>
+      )}
     </Provider>
   );
 };

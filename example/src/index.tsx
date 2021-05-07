@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import AppModule from './app/App.module';
+import { setDebug } from 'react-modular-js';
+
+setDebug(false);
 
 ReactDOM.render(
   <React.StrictMode>

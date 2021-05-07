@@ -11,9 +11,11 @@ const LoginModule = () => {
 
   return (
     <Provider binds={binds}>
-      <Switch>
-        <Route exact path={path} component={LoginPage} />
-      </Switch>
+      {() => (
+        <Switch>
+          <Route exact path={path} component={LoginPage} />
+        </Switch>
+      )}
     </Provider>
   );
 };
