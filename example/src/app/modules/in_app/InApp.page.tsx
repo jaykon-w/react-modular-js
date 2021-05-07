@@ -13,7 +13,6 @@ import './InApp.css';
 interface Props {}
 
 const InAppPage: React.FC<Props> = ({ children }) => {
-  console.log('RENDER INAPP');
   const inAppController = useProvider(InAppController);
   const sideMenuController = useProvider(SideMenuController);
   const { replace } = useHistory();

@@ -4,7 +4,6 @@ import { ISessionService } from './shared/auth/store/session/Session.service.int
 interface Props {}
 
 const AppPage: React.FC<Props> = ({ children }) => {
-  console.log('RENDER APP');
   const sessionService = useProvider(ISessionService);
 
   return (

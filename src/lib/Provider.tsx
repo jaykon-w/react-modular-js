@@ -34,7 +34,7 @@ export const Provider: React.FC<Props> = ({ children, binds }) => {
       [...dependencyMap.current!.values()].forEach((e) => {
         if (e.dispose) {
           e.dispose();
-          if (debug) console.log(`DISPOSE: ${e.__proto__.constructor.name}`);
+          if (debug) console.log(`%c DISPOSE: ${e.__proto__.constructor.name}`, 'color: #ff5722');
         }
       });
       controlledMappedInstances.delete(dependencyMap.current);
@@ -73,7 +73,8 @@ function getDependencies(
     function factoryInstance() {
       const depInstance = dependency(inject);
       dependecyMap.set(depInstance, depInstance);
-      if (debug) console.log(`INITIALIZE: ${depInstance.__proto__.constructor.name}`);
+      if (debug)
+        console.log(`%c INITIALIZE: ${depInstance.__proto__.constructor.name}`, 'color: #8bc34a');
     }
 
     if (parentCtx && options?.forwardRef) {

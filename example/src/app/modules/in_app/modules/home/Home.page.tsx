@@ -6,7 +6,6 @@ import { ISessionService } from '../../../../shared/auth/store/session/Session.s
 interface Props {}
 
 const HomePage: React.FC<Props> = () => {
-  console.log('RENDER HOME');
   const sessionService = useProvider(ISessionService);
   const [value, setValue] = useState<string>(sessionService.user.value!.name);
 

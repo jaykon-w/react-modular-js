@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 interface Props {}
 
 const AboutPage: React.FC<Props> = () => {
-  console.log('RENDER ABOUT');
-
   return (
     <div>
       <h1>ABOUT</h1>

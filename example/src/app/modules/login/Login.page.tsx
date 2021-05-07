@@ -10,8 +10,6 @@ const LoginPage: React.FC<Props> = () => {
   const loginController = useProvider(LoginController);
   const { replace } = useHistory();
 
-  console.log('RENDER LOGIN');
-
   const onsubmit = async (event: any) => {
     event.preventDefault();
     await loginController.login(event.target.email.value, event.target.password.value);

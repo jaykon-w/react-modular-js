@@ -5,7 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import AppModule from './app/App.module';
 import { setDebug } from 'react-modular-js';
 
-setDebug(false);
+setDebug(true);
 
 ReactDOM.render(
   <React.StrictMode>

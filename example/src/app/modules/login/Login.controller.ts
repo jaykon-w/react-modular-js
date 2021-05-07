@@ -8,9 +8,7 @@ export class LoginController implements IDispose {
   user?: IUser;
   error?: Error;
 
-  constructor(private session: ISessionService) {
-    console.log('INITIALIZE: LoginController');
-  }
+  constructor(private session: ISessionService) {}
 
   async login(email: string, pass: string) {
     try {
@@ -24,7 +22,5 @@ export class LoginController implements IDispose {
     }
   }
 
-  dispose() {
-    console.log('DISPOSE: LoginController');
-  }
+  dispose() {}
 }
