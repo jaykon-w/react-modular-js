@@ -40,10 +40,12 @@ export class SessionServiceMock extends ISessionService {
   }
 
   updateUser(user: Partial<IUser>): void {
-    this.user.next({
+    const _user = {
       ...this.user.value!,
       ...user,
-    });
+    };
+    this.user.next(_user);
+    localStorage.setItem('user', JSON.stringify(_user));
   }
 
   private restore() {

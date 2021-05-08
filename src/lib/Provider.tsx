@@ -48,6 +48,13 @@ export const Provider: React.FC<Props> = ({ children, binds }) => {
   ) : null;
 };
 
+function find<T>(cls: Function & { prototype: T }, _ctx: any): T | undefined {
+  const instance = [..._ctx.values()].find((e: any) => e instanceof cls);
+  if (instance) return instance;
+  if (!instance && !_ctx.has('parent')) return;
+  if (!instance && _ctx.has('parent')) return find(cls, _ctx.get('parent'));
+}
+
 function getDependencies(
   binds: Props['binds'],
   dependecyMap: Map<any, any>,
@@ -79,7 +86,7 @@ function getDependencies(
 
     if (parentCtx && options?.forwardRef) {
       try {
-        const instance = [...parentCtx.values()].find((e: any) => e instanceof options.forwardRef);
+        const instance = find(options.forwardRef, parentCtx);
         if (instance) dependecyMap.set(instance, instance);
         else factoryInstance();
       } catch (err) {
@@ -97,14 +104,8 @@ export function useProvider<T>(cls: Function & { prototype: T }): T {
   const ctx = useContext(Ctx);
 
   return useMemo(() => {
-    function find(_ctx: any): any {
-      const instance = [..._ctx.values()].find((e: any) => e instanceof cls);
-      if (instance) return instance;
-      if (!instance && !_ctx.has('parent'))
-        throw Error(`instance of ${cls.name} is not provided in this context`);
-      if (!instance && _ctx.has('parent')) return find(_ctx.get('parent'));
-    }
-
-    return find(ctx);
+    const instance = find<T>(cls, ctx);
+    if (!instance) throw Error(`instance of ${cls.name} is not provided in this context`);
+    return instance;
   }, [cls]);
 }
